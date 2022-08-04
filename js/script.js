@@ -12,6 +12,7 @@ if (localStorage.getItem('tasks')) {
 
 tasks.forEach(task => {
   renderTask(task);
+  numberOfTasks();
 });
 
 checkTaskList();
@@ -60,6 +61,8 @@ function addTask(e) {
   
     checkTaskList();
 
+    numberOfTasks();
+
   }
 }
 
@@ -74,7 +77,7 @@ function deleteTask(e) {
 
     parent.remove();
   }
-
+  numberOfTasks();
   checkTaskList();
 }
 
@@ -86,6 +89,7 @@ function completeTask(e) {
     const task = tasks.find(task => task.id === id);
     task.status = !task.status;
     saveLocalStorage();
+    numberOfTasks();
 
     const title = parent.querySelector('.task-list__title');
     title.classList.toggle('task-list__title_done');
@@ -111,4 +115,24 @@ function renderTask(task) {
 
 function saveLocalStorage() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function numberOfTasks() {
+
+  const div = document.querySelector('.tasks-num');
+  
+  if (tasks.length > 0) {
+  div.style.display = 'flex';
+  const newArr = tasks.filter(item => item.status);
+  const numDone = newArr.length;
+  const num = tasks.length;
+  div.innerHTML = `<div class="number">Tasks: ${num}</div>
+                   <div class="done">Done: ${numDone}</div>
+  `;
+  if (num <= 0) {
+    div.innerHTML = '';
+  }
+} else {
+  div.style.display = 'none';
+}
 }
